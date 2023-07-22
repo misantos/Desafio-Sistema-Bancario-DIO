@@ -1,3 +1,39 @@
+def inserir_usuario(clientes):
+    dicionario = {}
+    nome = input("Digite o nome do usuario da nova conta: ")
+    cpf = input("Digite o cpf: ")
+    data_nascimento = input("Digite a data de nascimento: ")
+    endereco = input("Digite o endereço: ")
+    dicionario = {"nome" : nome, "cpf": cpf, "data_nascimento": data_nascimento, "endereco": endereco}
+    if not clientes:
+        clientes.append(dicionario)
+    else:
+        for cliente in clientes:
+            if cliente["cpf"] == cpf:
+                print("CPF já cadastrado")
+                return clientes
+            
+        clientes.append(dicionario)
+    print(clientes)
+    return clientes
+        
+def criar_conta_corrente(conta_corrente, clientes, numero_da_conta):
+    agencia = "0001"
+    print("Cadastro de conta corrente\n")
+    usuario_cpf = input("Digite o seu cpf: ")
+    for cliente in clientes:
+        if usuario_cpf == cliente["cpf"]:
+            numero_da_conta += 1
+            conta_corrente.append({"agência": agencia, "numero_conta": numero_da_conta, "cliente": cliente})
+            print("Conta corrente cadastrada com sucesso!\n")
+            print(conta_corrente)
+            return conta_corrente, numero_da_conta
+    
+    print("CPF não está cadastrado!")
+    return conta_corrente, numero_da_conta
+        
+    
+
 def depositar(saldo, deposito, extrato,/):
     
     if deposito <= 0:
@@ -36,6 +72,8 @@ def extratos(saldo, /, *,  extrato):
 def menu():
     menu = """
 
+    [u] Criar usuário
+    [c] Criar Conta corrente
     [d] Depositar
     [s] Sacar
     [e] Extrato
@@ -50,10 +88,19 @@ def menu_principal():
     extrato = ""
     numero_saques = 0
     LIMITE_SAQUES = 3
+    clientes = []
+    conta_corrente = []
+    numero_da_conta = 0
     while True:
         opcao = input(menu())
+        
+        if opcao == "u":
+            clientes = inserir_usuario(clientes)
+        
+        elif opcao == "c":
+            conta_corrente, numero_da_conta = criar_conta_corrente(conta_corrente, clientes, numero_da_conta)
     
-        if opcao == "d":
+        elif opcao == "d":
             print("Depósito")
             deposito = float(input("Digite o valor do depósito: "))
             saldo, extrato = depositar(saldo, deposito, extrato)
